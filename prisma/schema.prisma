@@ -61,6 +61,39 @@ model TrendAnalysis {
   @@map("trend_analysis")
 }
 
+model Prediction {
+  id           String          @id @default(cuid())
+  type         PredictionType
+  platform     Platform
+  data         Json
+  accuracyScore Float          @map("accuracy_score")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+
+  @@map("predictions")
+}
+
+model UserPreference {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  preferences Json
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("user_preferences")
+}
+
+model Notification {
+  id        String            @id @default(cuid())
+  type      NotificationType
+  recipient String
+  content   Json
+  sentAt    DateTime?         @map("sent_at")
+  createdAt DateTime          @default(now()) @map("created_at")
+
+  @@map("notifications")
+}
+
 enum Platform {
   YOUTUBE
   TIKTOK
@@ -74,4 +107,16 @@ enum ArticleType {
 enum ArticleStatus {
   DRAFT
   PUBLISHED
+}
+
+enum PredictionType {
+  WEEKLY
+  MONTHLY
+  SEASONAL
+}
+
+enum NotificationType {
+  TREND_ALERT
+  REPORT_READY
+  SYSTEM_UPDATE
 }

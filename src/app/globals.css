@@ -2,26 +2,225 @@
 @tailwind components;
 @tailwind utilities;
 
+/* カスタムフォント */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  /* ライトモード */
+  --neo-light: #f0f0f3;
+  --neo-shadow-light: #d1d1d4;
+  --neo-shadow-inset: #ffffff;
+  --glass-white: rgba(255, 255, 255, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  
+  /* アニメーション */
+  --animation-duration: 0.3s;
+  --animation-easing: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.dark {
+  /* ダークモード */
+  --neo-light: #1a1a1a;
+  --neo-shadow-light: #0f0f0f;
+  --neo-shadow-inset: #2a2a2a;
+  --glass-white: rgba(0, 0, 0, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.08);
+}
+
+/* スムーズなダークモード切り替え */
+* {
+  transition: background-color var(--animation-duration) var(--animation-easing),
+              border-color var(--animation-duration) var(--animation-easing),
+              color var(--animation-duration) var(--animation-easing),
+              box-shadow var(--animation-duration) var(--animation-easing);
+}
+
+/* ベーススタイル */
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: #f0f0f3;
+  color: #333;
+  line-height: 1.6;
+  overflow-x: hidden;
 }
+
+.dark body {
+  background: #1a1a1a;
+  color: #e5e5e5;
+}
+
+/* ネオモーフィズム コンポーネント */
+@layer components {
+  .neo-card {
+    @apply bg-neo-light border-0 rounded-3xl;
+    box-shadow: 20px 20px 60px var(--neo-shadow-light), 
+                -20px -20px 60px var(--neo-shadow-inset);
+    transition: all var(--animation-duration) var(--animation-easing);
+  }
+
+  .neo-card:hover {
+    box-shadow: 10px 10px 30px var(--neo-shadow-light), 
+                -10px -10px 30px var(--neo-shadow-inset);
+    transform: translateY(-2px);
+  }
+
+  .neo-card-inset {
+    @apply bg-neo-light border-0 rounded-3xl;
+    box-shadow: inset 20px 20px 60px var(--neo-shadow-light), 
+                inset -20px -20px 60px var(--neo-shadow-inset);
+  }
+
+  .dark .neo-card {
+    @apply bg-neo-dark;
+    box-shadow: 20px 20px 60px #0f0f0f, 
+                -20px -20px 60px #2a2a2a;
+  }
+
+  .dark .neo-card:hover {
+    box-shadow: 10px 10px 30px #0f0f0f, 
+                -10px -10px 30px #2a2a2a;
+  }
+
+  .dark .neo-card-inset {
+    @apply bg-neo-dark;
+    box-shadow: inset 20px 20px 60px #0f0f0f, 
+                inset -20px -20px 60px #2a2a2a;
+  }
+}
+
+/* グラスモーフィズム コンポーネント */
+@layer components {
+  .glass-card {
+    background: var(--glass-white);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    @apply rounded-3xl;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  }
+
+  .glass-card-lg {
+    background: var(--glass-white);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid var(--glass-border);
+    @apply rounded-3xl;
+    box-shadow: 0 20px 40px 0 rgba(31, 38, 135, 0.4);
+  }
+
+  .glass-button {
+    background: var(--glass-white);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    @apply rounded-2xl px-6 py-3 font-medium transition-all duration-300;
+  }
+
+  .glass-button:hover {
+    background: rgba(255, 255, 255, 0.35);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px 0 rgba(31, 38, 135, 0.5);
+  }
+}
+
+/* カスタムアニメーション */
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
+  }
+
+  .hover-lift {
+    transition: transform var(--animation-duration) var(--animation-easing);
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+  }
+
+  .hover-glow {
+    transition: box-shadow var(--animation-duration) var(--animation-easing);
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(30px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes scaleIn {
+  from { 
+    opacity: 0; 
+    transform: scale(0.9); 
+  }
+  to { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+}
+
+/* スクロールバーのカスタマイズ */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--neo-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+/* フォーカス状態のカスタマイズ */
+.focus-neo:focus {
+  outline: none;
+  box-shadow: inset 5px 5px 15px var(--neo-shadow-light), 
+              inset -5px -5px 15px var(--neo-shadow-inset),
+              0 0 0 3px rgba(139, 92, 246, 0.3);
+}
+
+/* セレクション色のカスタマイズ */
+::selection {
+  background: rgba(139, 92, 246, 0.3);
+}
+
+/* レスポンシブなタイポグラフィ */
+.text-responsive-xs { font-size: clamp(0.75rem, 2vw, 0.875rem); }
+.text-responsive-sm { font-size: clamp(0.875rem, 2.5vw, 1rem); }
+.text-responsive-base { font-size: clamp(1rem, 3vw, 1.125rem); }
+.text-responsive-lg { font-size: clamp(1.125rem, 4vw, 1.25rem); }
+.text-responsive-xl { font-size: clamp(1.25rem, 5vw, 1.5rem); }
+.text-responsive-2xl { font-size: clamp(1.5rem, 6vw, 2rem); }
+.text-responsive-3xl { font-size: clamp(2rem, 8vw, 3rem); }
