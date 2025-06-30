@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model TrendData {
+  id          String   @id @default(cuid())
+  platform    Platform
+  title       String
+  videoId     String   @map("video_id")
+  views       BigInt?
+  likes       Int?
+  comments    Int?
+  hashtags    String[]
+  category    String?
+  collectedAt DateTime @default(now()) @map("collected_at")
+  weekNumber  Int      @map("week_number")
+  monthNumber Int      @map("month_number")
+  year        Int
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@unique([videoId, platform])
+  @@map("trend_data")
+}
+
+model AIArticle {
+  id          String        @id @default(cuid())
+  title       String
+  content     String
+  summary     String?
+  articleType ArticleType   @map("article_type")
+  platforms   Platform[]
+  publishedAt DateTime?     @map("published_at")
+  metadata    Json?
+  status      ArticleStatus @default(DRAFT)
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  @@map("ai_articles")
+}
+
+model TrendAnalysis {
+  id           String   @id @default(cuid())
+  weekNumber   Int?     @map("week_number")
+  monthNumber  Int?     @map("month_number")
+  year         Int
+  platform     Platform
+  topCategories Json    @map("top_categories")
+  growthTrends Json     @map("growth_trends")
+  aiInsights   String   @map("ai_insights")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("trend_analysis")
+}
+
+enum Platform {
+  YOUTUBE
+  TIKTOK
+}
+
+enum ArticleType {
+  WEEKLY
+  MONTHLY
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+}
