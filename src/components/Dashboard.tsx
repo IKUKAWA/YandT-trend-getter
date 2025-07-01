@@ -6,6 +6,9 @@ import { CategoryTrendChart } from './charts/CategoryTrendChart'
 import { PlatformPieChart } from './charts/PlatformPieChart'
 import { SystemControlPanel } from './admin/SystemControlPanel'
 import { ThemeToggle } from './ui/theme-toggle'
+import { TranscriptionChat } from './transcription/TranscriptionChat'
+import { EnhancedAdvancedAnalytics } from './analytics/EnhancedAdvancedAnalytics'
+import { AnalysisControls } from './ui/AnalysisControls'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   BarChart3, 
@@ -22,7 +25,8 @@ import {
   Youtube,
   Music2,
   Monitor,
-  Camera
+  Camera,
+  FileText
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { enrichTrendsWithCategories } from '@/lib/utils/category-mapper'
@@ -65,8 +69,10 @@ interface DashboardProps {
 
 export function Dashboard({ youtubeData, tiktokData, chartData, stats }: DashboardProps) {
   const [selectedPlatform, setSelectedPlatform] = useState<'all' | 'youtube' | 'tiktok' | 'x' | 'instagram'>('all')
-  const [currentView, setCurrentView] = useState<'dashboard' | 'analytics' | 'admin'>('dashboard')
+  const [currentView, setCurrentView] = useState<'dashboard' | 'analytics' | 'admin' | 'transcription'>('dashboard')
   const [enrichedData, setEnrichedData] = useState<any[]>([])
+  const [analysisSelectedPlatform, setAnalysisSelectedPlatform] = useState('all')
+  const [analysisSelectedCategory, setAnalysisSelectedCategory] = useState('')
 
   // データを日本語カテゴリで拡張
   useEffect(() => {
@@ -170,7 +176,8 @@ export function Dashboard({ youtubeData, tiktokData, chartData, stats }: Dashboa
             {[
               { key: 'dashboard', label: 'ダッシュボード', icon: BarChart3 },
               { key: 'analytics', label: '高度分析', icon: Activity },
-              { key: 'admin', label: 'システム制御', icon: Settings }
+              { key: 'admin', label: 'システム制御', icon: Settings },
+              { key: 'transcription', label: '文字起こし', icon: FileText }
             ].map((view) => {
               const Icon = view.icon
               return (
@@ -347,20 +354,39 @@ export function Dashboard({ youtubeData, tiktokData, chartData, stats }: Dashboa
               transition={{ duration: 0.5 }}
               className="space-y-8"
             >
-              {/* 新しい革新的チャート */}
-              <CategoryTrendChart 
-                timeRange="weekly"
-                chartType="area"
-                showAnimation={true}
-                className="mb-8"
-              />
+              {/* Enhanced Advanced Analytics with Bar, Radial and Scatter Matrix Charts */}
+              <EnhancedAdvancedAnalytics />
               
-              <PlatformPieChart 
-                chartType="donut"
-                showStats={true}
-                size="lg"
-                className="mb-8"
-              />
+              {/* Legacy Charts Section with Analysis Controls */}
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mt-8">
+                {/* PlatformPieChart - Radial Chart */}
+                <PlatformPieChart 
+                  chartType="donut"
+                  showStats={true}
+                  size="lg"
+                />
+                
+                {/* Analysis Controls - Middle Column */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  <AnalysisControls
+                    selectedPlatform={analysisSelectedPlatform}
+                    selectedCategory={analysisSelectedCategory}
+                    onPlatformChange={setAnalysisSelectedPlatform}
+                    onCategoryChange={setAnalysisSelectedCategory}
+                  />
+                </motion.div>
+                
+                {/* CategoryTrendChart */}
+                <CategoryTrendChart 
+                  timeRange="weekly"
+                  chartType="area"
+                  showAnimation={true}
+                />
+              </div>
             </motion.div>
           )}
 
@@ -373,6 +399,19 @@ export function Dashboard({ youtubeData, tiktokData, chartData, stats }: Dashboa
               transition={{ duration: 0.5 }}
             >
               <SystemControlPanel />
+            </motion.div>
+          )}
+
+          {currentView === 'transcription' && (
+            <motion.div
+              key="transcription"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="space-y-8"
+            >
+              <TranscriptionChat />
             </motion.div>
           )}
         </AnimatePresence>
