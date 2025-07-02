@@ -9,6 +9,7 @@ import { ThemeToggle } from './ui/theme-toggle'
 import { TranscriptionChat } from './transcription/TranscriptionChat'
 import { EnhancedAdvancedAnalytics } from './analytics/EnhancedAdvancedAnalytics'
 import { AnalysisControls } from './ui/AnalysisControls'
+import { ChannelAnalysisDashboard } from './channel/ChannelAnalysisDashboard'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   BarChart3, 
@@ -69,7 +70,7 @@ interface DashboardProps {
 
 export function Dashboard({ youtubeData, tiktokData, chartData, stats }: DashboardProps) {
   const [selectedPlatform, setSelectedPlatform] = useState<'all' | 'youtube' | 'tiktok' | 'x' | 'instagram'>('all')
-  const [currentView, setCurrentView] = useState<'dashboard' | 'analytics' | 'admin' | 'transcription'>('dashboard')
+  const [currentView, setCurrentView] = useState<'dashboard' | 'analytics' | 'admin' | 'transcription' | 'channel-analysis'>('dashboard')
   const [enrichedData, setEnrichedData] = useState<any[]>([])
   const [analysisSelectedPlatform, setAnalysisSelectedPlatform] = useState('all')
   const [analysisSelectedCategory, setAnalysisSelectedCategory] = useState('')
@@ -176,6 +177,7 @@ export function Dashboard({ youtubeData, tiktokData, chartData, stats }: Dashboa
             {[
               { key: 'dashboard', label: 'ダッシュボード', icon: BarChart3 },
               { key: 'analytics', label: '高度分析', icon: Activity },
+              { key: 'channel-analysis', label: 'チャンネル分析', icon: Target },
               { key: 'admin', label: 'システム制御', icon: Settings },
               { key: 'transcription', label: '文字起こし', icon: FileText }
             ].map((view) => {
@@ -251,7 +253,7 @@ export function Dashboard({ youtubeData, tiktokData, chartData, stats }: Dashboa
           {[
             {
               title: "総再生数",
-              value: `${(Number(stats.totalViews) / 1000000).toFixed(1)}M`,
+              value: `${(Number(stats.totalViews) / 1000000).toFixed(3)}M`,
               subtitle: "今週の累計",
               icon: Eye,
               color: "from-blue-500 to-blue-600",
@@ -387,6 +389,18 @@ export function Dashboard({ youtubeData, tiktokData, chartData, stats }: Dashboa
                   showAnimation={true}
                 />
               </div>
+            </motion.div>
+          )}
+
+          {currentView === 'channel-analysis' && (
+            <motion.div
+              key="channel-analysis"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              <ChannelAnalysisDashboard />
             </motion.div>
           )}
 

@@ -167,7 +167,7 @@ export function TrendCard({
             エンゲージメント率:
           </span>
           <span className="font-bold text-purple-600 dark:text-purple-400">
-            {engagementRate.toFixed(2)}%
+            {engagementRate.toFixed(3)}%
           </span>
         </motion.div>
 
