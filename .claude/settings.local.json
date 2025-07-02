@@ -8,7 +8,8 @@
       "Bash(npx next build:*)",
       "Bash(grep:*)",
       "Bash(rg:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(find:*)"
     ],
     "deny": []
   }

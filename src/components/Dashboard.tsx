@@ -6,7 +6,7 @@ import { CategoryTrendChart } from './charts/CategoryTrendChart'
 import { PlatformPieChart } from './charts/PlatformPieChart'
 import { SystemControlPanel } from './admin/SystemControlPanel'
 import { ThemeToggle } from './ui/theme-toggle'
-import { TranscriptionChat } from './transcription/TranscriptionChat'
+import { PsiTrendAI } from './ai/PsiTrendAI'
 import { EnhancedAdvancedAnalytics } from './analytics/EnhancedAdvancedAnalytics'
 import { AnalysisControls } from './ui/AnalysisControls'
 import { ChannelAnalysisDashboard } from './channel/ChannelAnalysisDashboard'
@@ -70,7 +70,7 @@ interface DashboardProps {
 
 export function Dashboard({ youtubeData, tiktokData, chartData, stats }: DashboardProps) {
   const [selectedPlatform, setSelectedPlatform] = useState<'all' | 'youtube' | 'tiktok' | 'x' | 'instagram'>('all')
-  const [currentView, setCurrentView] = useState<'dashboard' | 'analytics' | 'admin' | 'transcription' | 'channel-analysis'>('dashboard')
+  const [currentView, setCurrentView] = useState<'dashboard' | 'analytics' | 'admin' | 'psi-trend-ai' | 'channel-analysis'>('dashboard')
   const [enrichedData, setEnrichedData] = useState<any[]>([])
   const [analysisSelectedPlatform, setAnalysisSelectedPlatform] = useState('all')
   const [analysisSelectedCategory, setAnalysisSelectedCategory] = useState('')
@@ -179,7 +179,7 @@ export function Dashboard({ youtubeData, tiktokData, chartData, stats }: Dashboa
               { key: 'analytics', label: '高度分析', icon: Activity },
               { key: 'channel-analysis', label: 'チャンネル分析', icon: Target },
               { key: 'admin', label: 'システム制御', icon: Settings },
-              { key: 'transcription', label: '文字起こし', icon: FileText }
+              { key: 'psi-trend-ai', label: 'ΨtrendAI', icon: Sparkles }
             ].map((view) => {
               const Icon = view.icon
               return (
@@ -416,16 +416,16 @@ export function Dashboard({ youtubeData, tiktokData, chartData, stats }: Dashboa
             </motion.div>
           )}
 
-          {currentView === 'transcription' && (
+          {currentView === 'psi-trend-ai' && (
             <motion.div
-              key="transcription"
+              key="psi-trend-ai"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
               className="space-y-8"
             >
-              <TranscriptionChat />
+              <PsiTrendAI />
             </motion.div>
           )}
         </AnimatePresence>
